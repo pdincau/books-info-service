@@ -19,6 +19,9 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
+import static com.spotify.apollo.Status.*;
+import static okio.ByteString.encodeUtf8;
+
 public class BookInfoService {
 
     static final Logger LOG = LoggerFactory.getLogger(BookInfoService.class);
@@ -41,7 +44,7 @@ public class BookInfoService {
         List<String> views = repository.all();
         String body = new Gson().toJson(views);
         LOG.info("views are: {}", body);
-        return Response.forStatus(Status.OK).withHeaders(headers()).withPayload(ByteString.encodeUtf8(body));
+        return Response.forStatus(OK).withHeaders(headers()).withPayload(encodeUtf8(body));
     }
 
     private static Map<String, String> headers() {
