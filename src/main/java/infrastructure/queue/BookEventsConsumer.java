@@ -1,8 +1,9 @@
 package infrastructure.queue;
 
-import com.google.gson.Gson;
-import com.rabbitmq.client.*;
-import domain.View;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.Envelope;
 import domain.ViewRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +24,6 @@ public class BookEventsConsumer extends DefaultConsumer {
     public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)  throws IOException {
         String message = new String(body, "UTF-8");
         LOG.info("Processing received message: {}", message);
-        ViewDto viewDto = new Gson().fromJson(message, ViewDto.class);
-        View view = ViewFactory.createFrom(viewDto);
-        repository.insert(view);
+        repository.insert(message);
     }
 }

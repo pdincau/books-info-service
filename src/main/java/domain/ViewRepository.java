@@ -2,5 +2,5 @@ package domain;
 
 public interface ViewRepository {
 
-    void insert(View view);
+    void insert(String view);
 }
