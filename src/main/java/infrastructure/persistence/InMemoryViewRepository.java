@@ -22,4 +22,9 @@ public class InMemoryViewRepository implements ViewRepository {
         LOG.info("Saving view: {}", view);
         views.add(view);
     }
+
+    @Override
+    public List<String> all() {
+        return views;
+    }
 }
