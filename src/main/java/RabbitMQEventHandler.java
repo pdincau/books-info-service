@@ -10,7 +10,8 @@ public class RabbitMQEventHandler implements EventHandler {
 
     static final Logger LOG = LoggerFactory.getLogger(RabbitMQEventHandler.class);
 
-    private final static String QUEUE_NAME = "book_events";
+    private final static String EXCHANGE_NAME = "book_events";
+    public static final String BOOK_CREATED_TOPIC = "BookCreated";
 
     @Override
     public void listen() {
@@ -20,11 +21,13 @@ public class RabbitMQEventHandler implements EventHandler {
         try {
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+            channel.exchangeDeclare(EXCHANGE_NAME, "direct");
+            String queueName = channel.queueDeclare().getQueue();
+            channel.queueBind(queueName, EXCHANGE_NAME, BOOK_CREATED_TOPIC);
             Consumer consumer = new BookEventsConsumer(channel);
-            channel.basicConsume(QUEUE_NAME, true, consumer);
+            channel.basicConsume(queueName, true, consumer);
         } catch (IOException e) {
-            LOG.error("Failed while listening from queue: {}", QUEUE_NAME);
+            LOG.error("Failed while listening from exchange: {}");
         }
     }
 }
