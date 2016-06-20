@@ -12,6 +12,14 @@ public class InMemoryViewRepository implements ViewRepository {
     static final Logger LOG = LoggerFactory.getLogger(InMemoryViewRepository.class);
 
     private final List<String> views;
+    private static InMemoryViewRepository instance = null;
+
+    public static InMemoryViewRepository getInstance() {
+        if (instance == null) {
+            return new InMemoryViewRepository();
+        }
+        return instance;
+    }
 
     public InMemoryViewRepository() {
         this.views = new ArrayList<>();
