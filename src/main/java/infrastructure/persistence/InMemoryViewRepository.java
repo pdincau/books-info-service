@@ -25,6 +25,7 @@ public class InMemoryViewRepository implements ViewRepository {
 
     @Override
     public List<String> all() {
+        LOG.info("Retrieving all views");
         return views;
     }
 }
