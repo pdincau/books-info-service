@@ -36,7 +36,8 @@ public class BookInfoService {
 
     static void init(Environment environment) {
         environment.routingEngine()
-                .registerAutoRoute(Route.sync("GET", "/books", BookInfoService::addBook));
+                .registerAutoRoute(Route.sync("GET", "/books", BookInfoService::addBook))
+                .registerAutoRoute(Route.sync("GET", "/ping", context -> "pong"));
     }
 
     private static Response<ByteString> addBook(RequestContext context)  {
