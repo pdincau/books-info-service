@@ -3,16 +3,15 @@ import com.google.gson.Gson;
 import com.spotify.apollo.Environment;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
-import com.spotify.apollo.Status;
 import com.spotify.apollo.httpservice.HttpService;
 import com.spotify.apollo.httpservice.LoadingException;
 import com.spotify.apollo.route.Route;
-import com.sun.glass.ui.View;
 import domain.EventHandler;
 import domain.ViewRepository;
 import infrastructure.persistence.InMemoryViewRepository;
 import infrastructure.queue.RabbitMQEventHandler;
 import okio.ByteString;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,16 +35,24 @@ public class BookInfoService {
 
     static void init(Environment environment) {
         environment.routingEngine()
-                .registerAutoRoute(Route.sync("GET", "/books", BookInfoService::addBook))
+                .registerAutoRoute(Route.sync("GET", "/books", BookInfoService::books))
                 .registerAutoRoute(Route.sync("GET", "/ping", context -> "pong"));
     }
 
-    private static Response<ByteString> addBook(RequestContext context)  {
+    private static Response<ByteString> books(RequestContext context)  {
         LOG.info("Received request to retrieve all books");
-        List<String> views = repository.all();
+        String title = context.request().parameter("title").orElse("");
+        List<String> views = viewsWithTitle(title);
         String body = new Gson().toJson(views);
         LOG.info("views are: {}", body);
         return Response.forStatus(OK).withHeaders(headers()).withPayload(encodeUtf8(body));
+    }
+
+    private static List<String> viewsWithTitle(String titleToSearch) {
+        if (StringUtils.isBlank(titleToSearch)) {
+            return repository.all();
+        }
+        return repository.findBy(titleToSearch);
     }
 
     private static Map<String, String> headers() {
