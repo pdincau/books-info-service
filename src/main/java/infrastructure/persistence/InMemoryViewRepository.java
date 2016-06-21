@@ -36,12 +36,13 @@ public class InMemoryViewRepository implements ViewRepository {
 
     @Override
     public List<String> all() {
-        LOG.info("Retrieving all views");
+        LOG.info("Retrieving all books views");
         return views;
     }
 
     @Override
     public List<String> findBy(String title) {
+        LOG.info("Retrieving all books with title: {} views", title);
         String textToSearch = "\"title\":\""+ title + "\"";
         return views.stream().filter(view -> StringUtils.contains(view, textToSearch)).collect(toList());
     }
