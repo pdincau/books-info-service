@@ -6,6 +6,7 @@ import com.spotify.apollo.Response;
 import com.spotify.apollo.httpservice.HttpService;
 import com.spotify.apollo.httpservice.LoadingException;
 import com.spotify.apollo.route.Route;
+import domain.CommandGetViews;
 import domain.EventHandler;
 import domain.ViewRepository;
 import infrastructure.persistence.InMemoryViewRepository;
@@ -42,17 +43,11 @@ public class BookInfoService {
     private static Response<ByteString> books(RequestContext context)  {
         LOG.info("Received request to retrieve all books");
         String title = context.request().parameter("title").orElse("");
-        List<String> views = viewsWithTitle(title);
+        CommandGetViews getViews = new CommandGetViews(repository, title);
+        List<String> views = getViews.execute();
         String body = new Gson().toJson(views);
         LOG.info("views are: {}", body);
         return Response.forStatus(OK).withHeaders(headers()).withPayload(encodeUtf8(body));
-    }
-
-    private static List<String> viewsWithTitle(String titleToSearch) {
-        if (StringUtils.isBlank(titleToSearch)) {
-            return repository.all();
-        }
-        return repository.findBy(titleToSearch);
     }
 
     private static Map<String, String> headers() {
