@@ -43,7 +43,19 @@ public class InMemoryViewRepository implements ViewRepository {
     @Override
     public List<String> findBy(String title) {
         LOG.info("Retrieving all books with title: {} views", title);
+        if ("bookwithlatency".equals(title)) {
+            LOG.info("This is going to be very slow");
+            addLatency();
+        }
         String textToSearch = "\"title\":\""+ title + "\"";
         return views.stream().filter(view -> StringUtils.contains(view, textToSearch)).collect(toList());
+    }
+
+    private void addLatency() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
