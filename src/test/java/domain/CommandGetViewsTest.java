@@ -7,6 +7,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -56,10 +57,8 @@ public class CommandGetViewsTest {
         public List<String> findBy(String title) {
             try {
                 Thread.sleep(timeoutBeforeFallback);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return Arrays.asList("a view");
+            } catch (InterruptedException e) {}
+            return asList("a view");
         }
     }
 }
