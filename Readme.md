@@ -1,5 +1,10 @@
 Simple Spike with Apollo
 
+Dependencies
+------------
+In order to run this application you must have the Books Project:
+  https://github.com/pdincau/books
+
 Compile and Run
 ---------------
 
@@ -25,4 +30,3 @@ Next to do
 ----------
 
 1) Improve rabbitmq event handler
-
